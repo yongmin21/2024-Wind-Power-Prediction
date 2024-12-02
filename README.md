@@ -32,7 +32,7 @@ CPU 아키텍처 : x86
       
 4. src - 각종 함수들 및 config 정보 저장소  
     - config (input, output 경로, 모델 파라미터 등 구성요소)  
-    - data_processor (데이터 전처리 함수)  
+    - data_pipeline (데이터 전처리 함수)  
     - metric (NMAE 지표 수식)  
     - utils (데이터 불러오기, 최적화 등 함수)  
 
