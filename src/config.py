@@ -1,39 +1,53 @@
-input_path = "../input/"
-model_output = "../models/"
-test_size = 0.2
-mlflow = False
-target = 'energy_kwh'
+from dataclasses import dataclass
+from typing import Optional
+import pathlib
 
-lgb_params = {
-    'yg': {'n_estimators': 5000,
-           'learning_rate': 0.1,
-           'lambda_l2': 3,
-           'feature_fraction': 0.7,
-           'max_depth': -1,
-           'objective': 'fair',
-           'metric': 'l1',
-           'boosting_type': 'dart',
-           'rate_drop': 0.6,
-           'skip_drop': 0.7,
-           'n_jobs': -1,
-           'device_type': 'gpu',
-           'tree_learner': 'feature',
-           'random_state': 1
-    },
+workspace = pathlib.Path().parent
 
-    'gj': {'n_estimators': 3000,
-           'learning_rate': 0.07,
-           'lambda_l2': 3,
-           'feature_fraction': 0.5,
-           'max_depth': -1,
-           'objective': 'fair',
-           'metric': 'l1',
-           'boosting_type': 'dart',
-           'rate_drop': 0.5,
-           'skip_drop': 0.7,
-           'n_jobs': -1,
-           'device_type': 'gpu',
-           'tree_learner': 'feature',
-           'random_state': 1
-    }
-}
+@dataclass
+class DefaultConfig:
+       input_path = f"{workspace}/input/"
+       model_output = f"{workspace}/models/"
+       target = 'energy_kwh'
+       test_size = 0.2
+       mlflow = False
+
+@dataclass
+class LightGBMConfig:
+       n_estimators: int = 1000
+       learning_rate: float = 0.1
+       max_depth: int = -1
+       objective: str = 'mae'
+       random_state: int = 1
+       metric: Optional[str] = "l1"
+       lambda_l2: Optional[int] = 3
+       feature_fraction: Optional[float] = None
+       boosting_type: Optional[str] = None
+       rate_drop: Optional[float] = None
+       skip_drop: Optional[float] = None
+       n_jobs: Optional[int] = -1
+       device_type: Optional[str] = "gpu"
+       tree_learner: Optional[str] = 'feature'
+
+       @classmethod
+       def exp_yeonggwang(cls):
+              return cls(
+                     n_estimators=5000,
+                     feature_fraction=0.7,
+                     objective="fair",
+                     boosting_type="dart",
+                     rate_drop=0.6,
+                     skip_drop=0.7
+              )
+       
+       @classmethod
+       def exp_gyeongju(cls):
+              return cls(
+                     n_estimators=3000,
+                     learning_rate=0.07,
+                     feature_fraction=0.5,
+                     objective="fair",
+                     boosting_type="dart",
+                     rate_drop=0.5,
+                     skip_drop=0.7
+              )
